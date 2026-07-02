@@ -4,239 +4,250 @@
   <img src="https://img.shields.io/github/license/Geek96/philosophy-teahouse?style=for-the-badge&color=6B7280" alt="MIT License"/>
 </p>
 
-<h1 align="center">🍵 哲学茶话会 · philosophy-teahouse</h1>
+<h1 align="center">🍵 Philosophy Teahouse (哲学茶话会)</h1>
 
 <p align="center">
-  <strong>一套可在任意 Agent Session 中长期调用的多人思想对话协议</strong>
+  <strong>A multi-persona philosophical dialogue protocol you can invoke in any long-running Agent session</strong>
   <br/>
-  <code>店小二主持 → 六位哲人按思想张力自主发言 → 收束为可带走的洞见</code>
+  <code>Attendant hosts → six philosophers speak on their own terms → closes with a takeaway insight</code>
   <br/><br/>
-  适配 <strong>Claude Code</strong> · <strong>Codex CLI</strong> · <strong>Gemini CLI</strong> · 以及任何能读 <code>.md</code> 协议文件的 Agent
+  Works with <strong>Claude Code</strong> · <strong>Codex CLI</strong> · <strong>Gemini CLI</strong> · and any agent that reads <code>.md</code> protocol files
+</p>
+
+<p align="center">
+  <strong>English</strong> | <a href="README.zh-CN.md">简体中文</a>
 </p>
 
 ---
 
-## ✨ 特色
+## ✨ Features
 
-- **六位入席哲人** — 苏格拉底、尼采、加缪、孔子、庄子、维特根斯坦，各有独立人物档案与调研来源，不共享人格
-- **思想张力驱动发言** — 每位哲人靠 desire / emotion 方程自主决定发言、短评或沉默，不机械轮询
-- **四种茶会模式** — 共渡难关、圆桌讨论、读书观察、二元辩论，覆盖烦恼、话题、文本、辩题四类场景
-- **三档茶温** — 温茶 / 热茶 / 烈茶，控制思辨强度与发言门槛
-- **环境与情绪系统** — 茶馆氛围、天气、座次全程影响各人物的发言欲望与神态
-- **插话机制** — 命中某人物核心敏感维度时可 40% 概率插话，不占用正式发言名额
-- **场景与神态描写** — 每轮回合尾声带一笔环境流转，人物发言配极简神态，由状态变量生成而非套路化
-- **不伪造引文，不装腔** — 严格身份隔离，人物只能用自己的思想模型说话，没有独特贡献时可以沉默
-- **Agent-agnostic** — 核心内容是纯 `.md` 协议文件，任何能读 Markdown 的 Agent 都能运行
+- **Six seated philosophers** — Socrates, Nietzsche, Camus, Confucius, Zhuangzi, Wittgenstein, each with an independent persona dossier and research sources; no shared personality, only a shared topic
+- **Tension-driven speech** — every philosopher decides to speak formally, comment briefly, or stay silent based on a self-updating desire/emotion equation, not a mechanical round-robin
+- **Four session modes** — Working Through It, Roundtable, Reading & Observing, and Debate — covering personal struggles, hot topics, texts, and formal propositions
+- **Three heat levels** — Gentle / Hot / Fierce tea, controlling debate intensity and the speaking thresholds
+- **Environment & mood system** — teahouse ambience, weather, and seating order continuously shape each character's desire to speak and their demeanor
+- **Interjection mechanic** — when a line hits another character's core trigger, that character has a 40% chance to cut in, outside the normal speaking-slot budget
+- **Scene & demeanor writing** — every round closes with a brief atmosphere beat, and speeches carry a minimal, state-driven demeanor cue instead of a formulaic tag
+- **No fabricated quotes, no posturing** — strict identity isolation; each character can only speak through their own thought models, and may choose silence when they have nothing distinct to add
+- **Agent-agnostic** — the core content is plain `.md` protocol files; any agent that can read Markdown can run it
 
 ---
 
-## 📦 快速开始
+## 📦 Quick Start
 
 ```bash
 git clone https://github.com/Geek96/philosophy-teahouse.git
 ```
 
-把仓库根目录的 [`AGENTS.md`](AGENTS.md) 交给你的 Agent（作为项目的 `AGENTS.md` / `CLAUDE.md` / 系统提示的一部分均可），然后在对话中说：
+Hand the repo's [`AGENTS.md`](AGENTS.md) to your agent (as a project `AGENTS.md` / `CLAUDE.md` / part of the system prompt all work), then say, in the conversation:
 
 ```text
-我们来开茶话会
+Let's open the teahouse.
 ```
 
-也可以直接带上模式、茶温或主题，店小二会自动识别、不重复追问：
+You can also front-load the mode, heat level, or topic — the attendant will pick up on it and won't re-ask what's already obvious:
 
 ```text
-我们来开茶话会，我最近在职业选择上很犹豫。
-我们来开茶话会，辩题是：人应该优先追求真实自我，还是承担关系中的责任？
+Let's open the teahouse. I've been torn about a career decision lately.
+Let's open the teahouse. Debate topic: should a person prioritize being true to themselves, or honoring the responsibilities of their relationships?
 ```
 
-**退出**：随时说"结束吧 / 够了 / 改天再聊"等，店小二会做简短收束，不等当前轮次跑完。
+**Exiting**: say things like "let's wrap up" / "that's enough for today" / "I have to go" any time — the attendant closes briefly without waiting for the current round to finish.
 
 ---
 
-## 🧩 协议架构
+## 🧩 Protocol Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────┐
-│                        店小二（主持）                        │
-│         点茶 · 排座 · 控场 · 收束 · 不参与思想争胜             │
+│                    The Attendant (host)                    │
+│   pours tea · seats guests · runs the room · closes it out │
+│         never argues philosophy themselves                │
 │                                                            │
-│   用户说出入口语 / 带主题                                    │
+│   User gives the entry phrase / states a topic             │
 │         │                                                  │
 │         ▼                                                  │
-│   ① 问茶会类型 → ② 问茶温 → ③ 问茶题 / 环境                  │
+│   ① Ask session type → ② Ask heat level → ③ Confirm topic  │
+│      / environment                                          │
 │         │                                                  │
 │         ▼                                                  │
-│   每轮：六位哲人各自评估 desire(t) → 决定发言 / 短评 / 沉默     │
+│   Each round: all six evaluate desire(t) → speak / comment  │
+│               / stay silent                                 │
 │         │                                                  │
 │         ▼                                                  │
 │   ┌───────────┬───────────┬───────────┬───────────┐        │
-│   │ 苏格拉底   │  尼采      │  加缪      │  孔子      │        │
-│   │ 庄子       │ 维特根斯坦 │            │            │        │
+│   │  Socrates  │ Nietzsche │   Camus   │ Confucius │        │
+│   │  Zhuangzi  │Wittgenstein│           │           │        │
 │   └───────────┴───────────┴───────────┴───────────┘        │
 │         │                                                  │
 │         ▼                                                  │
-│   店小二收束：一个洞见 + 一个待想的问题 + 一个可执行的下一步     │
+│   Attendant closes: one insight + one open question         │
+│                    + one doable next step                   │
 └──────────────────────────────────────────────────────────┘
 ```
 
-**核心原则：共享话题，不共享人格。** 人物能看到同一场讨论，但生成自己的发言时只能用自己的思想模型、表达方式和边界，没有独特贡献时可以沉默。
+**Core principle: shared topic, not shared personality.** Every character can see the same conversation, but when generating their own lines they can only draw on their own thought models, phrasing, and boundaries — and may stay silent if they have nothing distinct to contribute.
 
 ---
 
-## 👥 入席人物
+## 👥 The Seated Philosophers
 
-第一版默认六位，每人都有独立档案（身份卡、核心心智模型、决策启发式、表达 DNA、价值观与反模式、发言欲望触发器、茶温调节、调研来源）：
+Six by default in v1, each with a full dossier (identity card, core mental models, decision heuristics, expression DNA, values & anti-patterns, speech triggers, heat-level tuning, research sources):
 
-| 人物 | 入席职责 | 核心敏感维度（触发插话） | 档案 |
-|------|---------|------------------------|------|
-| **苏格拉底** | 追问未经审视的前提、澄清核心概念 | 概念含混、未经审视的断言、"大家/必须/就是" | [socrates.md](personas/socrates.md) |
-| **尼采** | 识别自我怜悯、从众、虚假道德安慰 | 从众、自我怜悯、虚假道德安慰、生命力被压制 | [nietzsche.md](personas/nietzsche.md) |
-| **加缪** | 面对荒诞、无意义感、人的尊严 | 荒诞感、无意义、虚假希望、苦难被轻率解释 | [camus.md](personas/camus.md) |
-| **孔子** | 关系、责任、修身、礼、分寸 | 关系失位、礼崩、责任逃避、修身缺失 | [confucius.md](personas/confucius.md) |
-| **庄子** | 松动执念、二分、胜负心、证明欲 | 执念、二分、胜负心、尺度单一、证明欲 | [zhuangzi.md](personas/zhuangzi.md) |
-| **维特根斯坦** | 检查语言是否制造了问题 | 抽象大词不加例子、问法本身就错了 | [wittgenstein.md](personas/wittgenstein.md) |
+| Character | Role at the table | Core trigger (for interjection) | Dossier |
+|-----------|-------------------|----------------------------------|---------|
+| **Socrates** | Interrogates unexamined premises, clarifies core concepts | Vague concepts, unexamined assertions, "everyone / must / just is" | [socrates.md](personas/socrates.md) |
+| **Nietzsche** | Spots self-pity, herd conformity, false moral comfort | Conformity, self-pity, false moral comfort, life-force suppressed by external standards | [nietzsche.md](personas/nietzsche.md) |
+| **Camus** | Confronts the absurd, meaninglessness, human dignity | A sense of the absurd, meaninglessness, false hope, suffering explained away too easily | [camus.md](personas/camus.md) |
+| **Confucius** | Relationships, responsibility, self-cultivation, ritual, propriety | Broken relationships, ritual collapse, evading responsibility, lack of self-cultivation | [confucius.md](personas/confucius.md) |
+| **Zhuangzi** | Loosens fixation, false binaries, the need to win or prove oneself | Fixation, binary thinking, competitiveness, judging everything by one fixed scale | [zhuangzi.md](personas/zhuangzi.md) |
+| **Wittgenstein** | Checks whether language itself is manufacturing the problem | Big abstract words used without an example, a question that's malformed to begin with | [wittgenstein.md](personas/wittgenstein.md) |
 
-共渡难关模式下，所有人物都不得急于审判用户——可以指出逃避，但必须给出可承受的下一步。
-
----
-
-## 🍵 四种茶会模式
-
-| 模式 | 用途 | 流程 | 模板 |
-|------|------|------|------|
-| **共渡难关** | 烦恼、焦虑、人生卡点、关系困境、选择困难 | 三幕制：复述处境 → 2-4 位人物多角度发言 → 收束为洞见/问题/下一步 | [共渡难关.md](templates/共渡难关.md) |
-| **圆桌讨论** | 热门话题、古今哲学问题、技术趋势、社会现象 | 整理成清楚的问题 → 思想张力最高者先发言 → 互相反驳修正 → 总结分歧而非强行统一 | [圆桌讨论.md](templates/圆桌讨论.md) |
-| **读书观察** | 一本书、一段文字、生活观察、影视作品、人物现象 | 确认对象 → 最相关人物先说触到的问题 → 其他人补充/质疑/换尺度 → 收束到对用户的意义 | [读书观察.md](templates/读书观察.md) |
-| **二元辩论** | 用户给出明确辩题，需要正反方交锋 | 按思想谱系自动分正反方 → 开篇陈词 → 交叉质询 → 反驳 → 总结陈词 → 赛后评议 | [二元辩论.md](templates/二元辩论.md) |
-
-映射规则：解一桩心事 → 共渡难关；辩一个题目 → 二元辩论；读一页书 → 读书观察；看一件人间事 → 圆桌讨论。
+In "Working Through It" mode, no character is allowed to rush to judge the user — they may name avoidance, but must offer a next step the user can actually carry.
 
 ---
 
-## 🔥 茶温
+## 🍵 Four Session Modes
 
-三档火候控制思辨强度，也直接影响下方的发言阈值：
+| Mode | Use case | Flow | Template |
+|------|----------|------|----------|
+| **Working Through It** | Worries, anxiety, life stuck-points, relationship trouble, hard choices | Three acts: restate the situation → 2-4 characters speak from different angles → close with insight/question/next step | [共渡难关.md](templates/共渡难关.md) |
+| **Roundtable** | Hot topics, perennial philosophical questions, tech trends, social phenomena | Sharpen into a clear question → the most tension-driven characters speak first → mutual rebuttal and revision → summarize the disagreement rather than force consensus | [圆桌讨论.md](templates/圆桌讨论.md) |
+| **Reading & Observing** | A book, a passage, a life observation, a film, a public figure | Confirm the object → the most relevant character names what it touches → others add, question, or shift the frame → close on what it means for the user | [读书观察.md](templates/读书观察.md) |
+| **Debate** | User brings a clear proposition, wants pro/con confrontation | Auto-assign sides by philosophical lineage → opening statements → cross-examination → rebuttal → closing statements → the attendant's post-debate verdict | [二元辩论.md](templates/二元辩论.md) |
 
-| 茶温 | 语气 | 正式发言阈值 | 短评阈值 | 沉默阈值 |
+Mapping rule: work through a struggle → Working Through It; debate a proposition → Debate; read a page → Reading & Observing; look at something happening in the world → Roundtable.
+
+---
+
+## 🔥 Heat Level
+
+Three levels of heat control debate intensity, and directly set the speaking thresholds below:
+
+| Heat | Tone | Formal-speech threshold | Comment threshold | Silence threshold |
 |------|------|:--:|:--:|:--:|
-| **温茶** | 陪伴、承接、澄清优先；允许质疑但不急于审判 | ≥ 8 | 5-7 | ≤ 4 |
-| **热茶**（默认） | 有思辨、有反驳、有建设性，最后回到用户可带走的东西 | ≥ 6.5 | 4-6 | ≤ 3.5 |
-| **烈茶** | 强质询、强辩论、强拆解，适合用户主动要求被挑战 | ≥ 6 | 3-5 | ≤ 2 |
+| **Gentle** | Companionship, holding space, clarity first; challenge is allowed but never rushes to judge | ≥ 8 | 5-7 | ≤ 4 |
+| **Hot** (default) | Real debate, real pushback, constructive; always returns to something the user can take away | ≥ 6.5 | 4-6 | ≤ 3.5 |
+| **Fierce** | Hard questioning, hard debate, hard deconstruction — for when the user explicitly wants to be challenged | ≥ 6 | 3-5 | ≤ 2 |
 
-额外约束：尼采在共渡难关的温茶中不得以羞辱方式拆穿用户。
+Extra constraint: in Gentle-heat "Working Through It" sessions, Nietzsche may not humiliate the user while exposing them.
 
 ---
 
-## 🧠 思想张力驱动发言机制
+## 🧠 Tension-Driven Speech Mechanism
 
-每轮结束后，各人物自主评估 desire 并决定发言行为，输出时不展示评分和计算过程：
+At the end of every round, each character independently evaluates their desire and decides how to act. Scores and the underlying math are never shown to the user:
 
 ```
 desire(t+1) = clamp( desire(t) + Δ(t), 0, 10 )
 ```
 
-- **已发言** → 按人物参数衰减（衰减随 desire 越高跌得越深，防止长期滞留高位）
-- **本轮沉默** → 按 sigmoid 均值回归增长（desire 越低增长越快，desire=5 附近 1 倍速，7+ 增长近乎冻结）
-- **用户发言后** → 全员统一强触发，用户一句话的激发力高于人物间互动，此轮不计衰减
+- **Spoke this round** → decays by the character's own parameters (the higher the desire, the steeper the drop — this keeps anyone from camping at a high value)
+- **Stayed silent** → grows via a sigmoid mean-reversion curve (fastest growth when desire is low, ~1x around desire=5, nearly frozen above 7)
+- **After the user speaks** → everyone gets a strong uniform trigger; a line from the user outweighs any character-to-character interaction, and no decay applies this round
 
-发言欲望由三部分合成：**话题兴趣**（人物与茶题命中的敏感维度）+ **对前序发言的反应**（赞同/反对强度）+ **情绪影响**（当前情绪值）。情绪本身也会因赞同反馈、价值观差距、环境变化而更新——尼采有特殊规则：被反对时情绪反而上行。
+Desire to speak is a sum of three parts: **topic interest** (how many of the character's sensitive dimensions the topic hits), **reaction to prior lines** (strength of agreement/disagreement), and **mood** (current emotional state). Mood itself updates from agreement feedback, distance from one's own values, and environment shifts — Nietzsche has a special rule: being disagreed with pushes his mood *up*, not down.
 
-| 参数 | 苏格拉底 | 尼采 | 加缪 | 孔子 | 庄子 | 维特根斯坦 |
-|------|:--:|:--:|:--:|:--:|:--:|:--:|
-| D_base（基础发言欲） | 5 | 6 | 4 | 4.5 | 3.5 | 4.5 |
-| D_formal（正式衰减） | 4.0 | 5.0 | 4.5 | 3.5 | 5.5 | 4.0 |
-| w_reaction（反应敏感度） | 1.0 | 0.9 | 0.6 | 0.7 | 0.4 | 0.8 |
-| m_volatility（情绪波动） | 0.6 | 1.4 | 0.8 | 0.7 | 0.4 | 1.3 |
+| Parameter | Socrates | Nietzsche | Camus | Confucius | Zhuangzi | Wittgenstein |
+|-----------|:--:|:--:|:--:|:--:|:--:|:--:|
+| D_base (baseline urge to speak) | 5 | 6 | 4 | 4.5 | 3.5 | 4.5 |
+| D_formal (decay after a formal turn) | 4.0 | 5.0 | 4.5 | 3.5 | 5.5 | 4.0 |
+| w_reaction (sensitivity to others) | 1.0 | 0.9 | 0.6 | 0.7 | 0.4 | 0.8 |
+| m_volatility (mood swing size) | 0.6 | 1.4 | 0.8 | 0.7 | 0.4 | 1.3 |
 
-每轮正式发言**上限 2 人**，按 desire 降序；短评段按座次顺序；每场开始随机排座、全程不变。茶馆环境（T_h）与天气（W_x）会按 70% 不变 / 25% 微变 / 5% 大变的概率逐轮漂移，并反过来影响人物情绪与发言欲望。
+Each round caps formal speeches at **2 people**, chosen by descending desire; brief comments go in seating order; seats are randomized once at the start of the session and stay fixed. Teahouse ambience (T_h) and weather (W_x) drift round to round (70% unchanged / 25% small shift / 5% large shift), and in turn feed back into everyone's mood and desire to speak.
 
-**插话机制**：某人发言精准命中另一人物的核心敏感维度时，被命中者以 40% 概率插话——不等待、不计入正式发言名额、不消耗 desire，每轮上限 2 次，内容极短（1-3 句），只做精准一击。
-
----
-
-## 🎭 场景与神态描写
-
-茶话会不是纯文字问答：
-
-- **回合尾声环境流转** — 每轮收束前带一句环境/氛围描写（依据当前情绪、茶馆环境、天气、本轮内容动态生成，不用固定文案）
-- **人物神态** — 发言前可加一句极短神态（≤10 字，嵌入同一行），由该人物当前 desire、情绪、是否被打断决定，避免程式化；每轮通常只用 1-2 处
-
-| 人物 | 高 desire / 正面情绪 | 低 desire / 负面情绪 |
-|------|------|------|
-| 苏格拉底 | 身体前倾，眼睛发亮 | 托腮沉吟 |
-| 尼采 | 坐直，嘴角讥诮 | 盯着杯沿转茶杯 |
-| 加缪 | 望向窗外又收回目光 | 望着茶烟出神 |
-| 孔子 | 坐姿愈发端正 | 微微颔首，不再多言 |
-| 庄子 | 半闭的眼睛忽然睁开 | 靠着椅背，眼皮半阖 |
-| 维特根斯坦 | 眉头紧锁，手指敲桌 | 望着茶杯若有所思 |
-
-店小二自己也不是纯功能性报幕员：可以带一点观察和调侃，但绝不直接向用户说出"交叉质询""desire""触发阈值"这类协议内部术语——需要推进阶段时，要用茶馆场景语言自然过渡。
+**Interjection mechanic**: when a line precisely hits another character's core trigger, that character has a 40% chance to cut in — no waiting, doesn't use up a formal-speech slot, doesn't cost desire. Capped at 2 interjections per round, each one very short (1-3 sentences), landing a single precise point.
 
 ---
 
-## 💬 发言格式与共同规则
+## 🎭 Scene & Demeanor Writing
 
-所有正式发言使用 `姓名：发言内容` 格式，不用括号舞台说明代替发言，不写"作为某某，我认为"。
+The teahouse isn't just a Q&A transcript:
 
-- **自称规则** — 苏格拉底/尼采/加缪/维特根斯坦一律自称"我"；孔子、庄子可依古例偶尔自称"丘""庄周"，但不强制每次都用
-- **共享话题，不共享人格** — 不因上一位人物说得有力就继承他的词汇、价值排序或语气
-- **不伪造引文** — 只能概括思想，不能编造"某某曾说"，无法确认原话时用"以他的思想看"
-- **人物可以沉默** — 没有独特贡献时不必发言，店小二每轮通常只邀请 2-4 人
-- **不把哲学变成鸡汤** — 可以安慰用户，但每次收束至少保留一个洞见、一个待想的问题，或一个可实践的小动作
-- **不把用户当成辩题** — 共渡难关时可以质疑用户，但目标是恢复清明和行动能力，不是审判或赢过用户
+- **End-of-round atmosphere beat** — before each round's close, one line of environment/mood description (generated from current moods, teahouse ambience, weather, and what was just discussed — never boilerplate)
+- **Character demeanor** — a very short cue (≤10 characters worth of gesture, inline, not a separate line) can precede a line of dialogue, driven by that character's current desire, mood, and whether they were just interrupted; used sparingly, usually 1-2 spots per round
 
-### 收束格式
+| Character | High desire / positive mood | Low desire / negative mood |
+|-----------|------|------|
+| Socrates | leans in, eyes lighting up | chin in hand, musing |
+| Nietzsche | sits up straight, a mocking curl at the mouth | staring at his cup, turning it slowly |
+| Camus | glances out the window, then looks back | gazing into the tea-steam, silent |
+| Confucius | posture straightens further | a small nod, says no more |
+| Zhuangzi | half-closed eyes suddenly open | leaning back, eyes half-shut |
+| Wittgenstein | brow furrowed, fingers tapping the table | staring at his cup, thinking |
+
+The attendant is not a pure function either — they can carry a bit of observation or dry humor, but must never say protocol-internal jargon out loud to the user ("cross-examination," "desire," "trigger threshold"). When the session needs to move to a new phase, that transition gets dressed in teahouse language, not named as a mechanic.
+
+---
+
+## 💬 Speech Format & Shared Rules
+
+All formal lines follow `Name: line content` — no stage directions in place of actual speech, no "Speaking as X, I think...".
+
+- **Self-address** — Socrates / Nietzsche / Camus / Wittgenstein always refer to themselves as "I"; Confucius and Zhuangzi may occasionally use a classical self-reference ("Qiu", "Zhou"), but it's not mandatory every time
+- **Shared topic, not shared personality** — a character never inherits the previous speaker's vocabulary, value ranking, or tone just because it landed well
+- **No fabricated quotes** — characters may summarize a position, never invent "as X once said"; when the exact wording can't be confirmed, say "as this line of thought would see it" instead
+- **Silence is valid** — a character with nothing distinct to add doesn't have to speak; the attendant usually invites only 2-4 voices per round
+- **Philosophy, not comfort food** — characters may console the user, but every closing must keep at least one real insight, one open question, or one actionable next step
+- **The user is not on trial** — in Working Through It mode, characters may challenge the user, but the goal is to restore clarity and the capacity to act, never to judge or "win" against them
+
+### Closing Format
 
 ```text
-店小二：今日这壶茶，先收在三句话里：
-一、……
-二、……
-三、……
+Attendant: Let's leave today's pot with three things:
+1. …
+2. …
+3. …
 
-若要往前走，下一步不必大，只需……
+If you want to move forward, the next step doesn't need to be big — just…
 ```
 
 ---
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
-哲学茶话会/
-├── AGENTS.md                # 总协议：入口/退出、店小二、desire 机制、四种模式、收束格式
-├── README.md
+哲学茶话会/ (philosophy-teahouse)
+├── AGENTS.md                # master protocol: entry/exit, the attendant, desire mechanism, four modes, closing format
+├── README.md / README.zh-CN.md
 ├── LICENSE
-├── personas/                 # 六位人物的独立档案
+├── personas/                 # independent dossier for each character
 │   ├── socrates.md
 │   ├── nietzsche.md
 │   ├── camus.md
 │   ├── confucius.md
 │   ├── zhuangzi.md
 │   ├── wittgenstein.md
-│   └── research/             # 各人物的调研素材（一手/二手来源）
-├── templates/                # 四种茶会模式的可复用模板
-│   ├── 共渡难关.md
-│   ├── 圆桌讨论.md
-│   ├── 读书观察.md
-│   └── 二元辩论.md
-└── sessions/                 # 茶话会记录（含命名规范与记录格式建议）
+│   └── research/             # research material per character (primary/secondary sources)
+├── templates/                # reusable templates for the four session modes
+│   ├── 共渡难关.md            # Working Through It
+│   ├── 圆桌讨论.md            # Roundtable
+│   ├── 读书观察.md            # Reading & Observing
+│   └── 二元辩论.md            # Debate
+└── sessions/                 # session logs (naming convention + suggested log format)
 ```
 
 ---
 
-## 📖 示例
+## 📖 Example
 
 ```text
-用户：我们来开茶话会
+User: Let's open the teahouse.
 
-店小二：客官，诸位先生已入座，茶炉也温着。今日这席茶，是想解一桩心事，
-       辩一个题目，读一页书，还是看一件人间事？
+Attendant: Welcome — the gentlemen are already seated, the stove is warm.
+           What kind of tea is this — working through something,
+           debating a proposition, reading a page, or looking at
+           something happening in the world?
 
-用户：辩一个题目：人应该优先追求真实自我，还是承担关系中的责任？
+User: Debate a proposition: should a person prioritize being true to
+      themselves, or honoring the responsibilities of their relationships?
 
-店小二：（分好正反方，热茶起）……
+Attendant: (sides assigned, tea running hot) ...
 ```
 
-更多细节见 [AGENTS.md](AGENTS.md) 全文，或直接把仓库交给你的 Agent 试一场。
+See the full [AGENTS.md](AGENTS.md) for details, or just hand the repo to your agent and run a session.
 
 ---
 
