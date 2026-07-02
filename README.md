@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/AI_Agent-Protocol-7C3AED?style=for-the-badge" alt="AI Agent Protocol"/>
-  <img src="https://img.shields.io/badge/version-1.0-10B981?style=for-the-badge" alt="Version 1.0"/>
+  <img src="https://img.shields.io/badge/version-1.0.0-10B981?style=for-the-badge" alt="Version 1.0.0"/>
   <img src="https://img.shields.io/github/license/Geek96/philosophy-teahouse?style=for-the-badge&color=6B7280" alt="MIT License"/>
 </p>
 
@@ -213,6 +213,9 @@ If you want to move forward, the next step doesn't need to be big — just…
 ├── AGENTS.md                # master protocol: entry/exit, the attendant, desire mechanism, four modes, closing format
 ├── README.md / README.zh-CN.md
 ├── LICENSE
+├── CONTRIBUTING.md           # versioning rules (borrowed from paper-research-skill)
+├── CHANGELOG.md
+├── version.json               # single source of truth for the version number
 ├── personas/                 # independent dossier for each character
 │   ├── socrates.md
 │   ├── nietzsche.md

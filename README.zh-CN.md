@@ -1,6 +1,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/AI_Agent-Protocol-7C3AED?style=for-the-badge" alt="AI Agent Protocol"/>
-  <img src="https://img.shields.io/badge/version-1.0-10B981?style=for-the-badge" alt="Version 1.0"/>
+  <img src="https://img.shields.io/badge/version-1.0.0-10B981?style=for-the-badge" alt="Version 1.0.0"/>
   <img src="https://img.shields.io/github/license/Geek96/philosophy-teahouse?style=for-the-badge&color=6B7280" alt="MIT License"/>
 </p>
 
@@ -207,8 +207,11 @@ desire(t+1) = clamp( desire(t) + Δ(t), 0, 10 )
 ```
 哲学茶话会/
 ├── AGENTS.md                # 总协议：入口/退出、店小二、desire 机制、四种模式、收束格式
-├── README.md
+├── README.md / README.zh-CN.md
 ├── LICENSE
+├── CONTRIBUTING.md           # 版本维护规则（借鉴 paper-research-skill）
+├── CHANGELOG.md
+├── version.json               # 唯一版本真源
 ├── personas/                 # 六位人物的独立档案
 │   ├── socrates.md
 │   ├── nietzsche.md
